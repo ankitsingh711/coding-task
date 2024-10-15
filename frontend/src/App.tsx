@@ -9,9 +9,14 @@ const App = () => {
       <div className="container mx-auto py-8">
         <h1 className="text-3xl font-semibold text-center mb-8">E-commerce Management</h1>
         <Home />
-        <UserForm />
-        <OrderForm />
-        <ProductForm />
+        
+        {/* Flexbox container for the forms */}
+        <div className="flex flex-col md:flex-row gap-8 justify-between">
+          <UserForm />
+          <OrderForm />
+          <ProductForm />
+        </div>
+        
       </div>
     </div>
   );

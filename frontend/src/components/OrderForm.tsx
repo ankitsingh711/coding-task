@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TextField, Button, Container, Typography, Paper } from '@mui/material';
 import { createOrder } from '../services/api';
 
 const OrderForm = () => {
@@ -19,36 +20,56 @@ const OrderForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Create Order</h2>
-      <input
-        value={orderID}
-        onChange={(e) => setOrderID(e.target.value)}
-        placeholder="Order ID"
-        className="w-full p-2 mb-4 border border-gray-300 rounded"
-      />
-      <input
-        value={productId}
-        onChange={(e) => setProductId(e.target.value)}
-        placeholder="Product ID"
-        className="w-full p-2 mb-4 border border-gray-300 rounded"
-      />
-      <input
-        value={orderedOn}
-        onChange={(e) => setOrderedOn(e.target.value)}
-        placeholder="Ordered On"
-        className="w-full p-2 mb-4 border border-gray-300 rounded"
-      />
-      <input
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-        placeholder="User ID"
-        className="w-full p-2 mb-4 border border-gray-300 rounded"
-      />
-      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-700">
-        Create Order
-      </button>
-    </form>
+    <Container maxWidth="sm">
+      <Paper elevation={3} sx={{ padding: 4 }}>
+        <Typography variant="h5" component="h2" gutterBottom>
+          Create Order
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Order ID"
+            value={orderID}
+            onChange={(e) => setOrderID(e.target.value)}
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            label="Product ID"
+            value={productId}
+            onChange={(e) => setProductId(e.target.value)}
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            label="Ordered On"
+            value={orderedOn}
+            onChange={(e) => setOrderedOn(e.target.value)}
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            label="User ID"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ marginTop: 2 }}
+          >
+            Create Order
+          </Button>
+        </form>
+      </Paper>
+    </Container>
   );
 };
 

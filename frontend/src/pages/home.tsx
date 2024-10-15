@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { getOrders } from '../services/api';
-import { useTable, Column, useFilters } from 'react-table';
+import React, { useEffect, useState, useCallback } from "react";
+import { getOrders } from "../services/api";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import { TextField, Box, CircularProgress } from "@mui/material";
 
 interface Order {
   orderID: string;
@@ -12,18 +13,22 @@ interface Order {
 const Home = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [filters, setFilters] = useState({
-    address: '',
-    productId: '',
-    orderedOn: '',
-    userId: '',
+    productId: "",
+    orderedOn: "",
+    userId: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: 5,
+    page: 0,
+  });
 
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await getOrders(filters);
-      setOrders(response.data);
+      console.log(response)
+      setOrders(response.data.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
     } finally {
@@ -33,103 +38,77 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData, filters]);
+  }, [fetchData]);
 
-  const columns: Column<Order>[] = useMemo(() => [
-    { Header: 'Order ID', accessor: 'orderID' },
-    { Header: 'Product ID', accessor: 'productId' },
-    { Header: 'Ordered On', accessor: 'orderedOn' },
-    { Header: 'User ID', accessor: 'userId' },
-  ], []);
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    setFilter,
-  } = useTable(
-    {
-      columns,
-      data: orders,
-      initialState: { filters: [] },
-    },
-    useFilters
-  );
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>, columnId: string) => {
-    const value = e.target.value;
-    setFilters(prevFilters => {
-      const newFilters = { ...prevFilters, [columnId]: value };
-      return newFilters;
-    });
-    setFilter(columnId, value); 
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    field: string
+  ) => {
+    e.preventDefault();
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [field]: e.target.value,
+    }));
   };
+
+  const columns: GridColDef[] = [
+    { field: "orderID", headerName: "Order ID", width: 150 },
+    { field: "productId", headerName: "Product ID", width: 150 },
+    { field: "orderedOn", headerName: "Ordered On", width: 150 },
+    { field: "userId", headerName: "User ID", width: 150 },
+  ];
 
   return (
     <div className="max-w-7xl mx-auto p-4">
       {isLoading ? (
-        <p>Loading orders...</p>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
+          <CircularProgress />
+        </Box>
       ) : (
         <>
           {/* Filter Inputs */}
           <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Filter by Product ID"
+            <TextField
+              label="Filter by Product ID"
               value={filters.productId}
-              onChange={(e) => handleFilterChange(e, 'productId')}
-              className="mr-2 p-2 border rounded"
+              onChange={(e) => handleFilterChange(e, "productId")}
+              variant="outlined"
+              margin="normal"
+              style={{ marginRight: "10px" }}
             />
-            <input
-              type="text"
-              placeholder="Filter by User ID"
+            <TextField
+              label="Filter by User ID"
               value={filters.userId}
-              onChange={(e) => handleFilterChange(e, 'userId')}
-              className="mr-2 p-2 border rounded"
+              onChange={(e) => handleFilterChange(e, "userId")}
+              variant="outlined"
+              margin="normal"
+              style={{ marginRight: "10px" }}
             />
-            <input
-              type="text"
-              placeholder="Filter by Ordered On"
+            <TextField
+              label="Filter by Ordered On"
               value={filters.orderedOn}
-              onChange={(e) => handleFilterChange(e, 'orderedOn')}
-              className="mr-2 p-2 border rounded"
-            />
-            <input
-              type="text"
-              placeholder="Filter by Address"
-              value={filters.address}
-              onChange={(e) => handleFilterChange(e, 'address')}
-              className="p-2 border rounded"
+              onChange={(e) => handleFilterChange(e, "orderedOn")}
+              variant="outlined"
+              margin="normal"
             />
           </div>
 
-          <table {...getTableProps()} className="min-w-full bg-white shadow-md rounded-lg">
-            <thead>
-              {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
-                    <th {...column.getHeaderProps()} className="px-4 py-2 text-left border-b">
-                      {column.render('Header')}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {rows.map(row => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => (
-                      <td {...cell.getCellProps()} className="px-4 py-2 border-b">{cell.render('Cell')}</td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div style={{ height: 400, width: "100%" }}>
+            <DataGrid
+              rows={orders}
+              columns={columns}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              slots={{ toolbar: GridToolbar }}
+              getRowId={(row) => row.orderID}
+              disableRowSelectionOnClick
+            />
+          </div>
         </>
       )}
     </div>

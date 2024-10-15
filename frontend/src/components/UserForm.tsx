@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TextField, Button, Container, Typography, Paper } from '@mui/material';
 import { createUser } from '../services/api';
 
 const UserForm = () => {
@@ -19,36 +20,56 @@ const UserForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Create User</h2>
-      <input
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-        className="w-full p-2 mb-4 border border-gray-300 rounded"
-      />
-      <input
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-        placeholder="Address"
-        className="w-full p-2 mb-4 border border-gray-300 rounded"
-      />
-      <input
-        value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
-        placeholder="Phone Number"
-        className="w-full p-2 mb-4 border border-gray-300 rounded"
-      />
-      <input
-        value={emailAddress}
-        onChange={(e) => setEmailAddress(e.target.value)}
-        placeholder="Email"
-        className="w-full p-2 mb-4 border border-gray-300 rounded"
-      />
-      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-700">
-        Create User
-      </button>
-    </form>
+    <Container maxWidth="sm">
+      <Paper elevation={3} sx={{ padding: 4 }}>
+        <Typography variant="h5" component="h2" gutterBottom>
+          Create User
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            label="Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            label="Phone Number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            label="Email"
+            value={emailAddress}
+            onChange={(e) => setEmailAddress(e.target.value)}
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ marginTop: 2 }}
+          >
+            Create User
+          </Button>
+        </form>
+      </Paper>
+    </Container>
   );
 };
 
