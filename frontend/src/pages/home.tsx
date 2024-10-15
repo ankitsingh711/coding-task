@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { getOrders } from "../services/api";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { TextField, Box, CircularProgress } from "@mui/material";
+import debounce from "lodash.debounce";
 
 interface Order {
   orderID: string;
@@ -23,28 +24,33 @@ const Home = () => {
     page: 0,
   });
 
-  const fetchData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const response = await getOrders(filters);
-      console.log(response)
-      setOrders(response.data.data);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [filters]);
+  // Debounced data fetching
+  const fetchData = useCallback(
+    debounce(async () => {
+      try {
+        setIsLoading(true);
+        const response = await getOrders(filters);
+        console.log(response);
+        setOrders(response.data.data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 500),
+    [filters]
+  );
 
+  // Trigger fetchData when filters change
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [filters, fetchData]);
 
+  // Handle filter input change
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     field: string
   ) => {
-    e.preventDefault();
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: e.target.value,
@@ -98,6 +104,7 @@ const Home = () => {
             />
           </div>
 
+          {/* DataGrid for Orders */}
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
               rows={orders}

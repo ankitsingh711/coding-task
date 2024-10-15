@@ -15,12 +15,14 @@
     "@mui/material": "^6.1.4",
     "@mui/x-data-grid": "^7.20.0",
     "axios": "^1.7.7",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-table": "^7.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
     "@types/react-table": "^7.7.20",
