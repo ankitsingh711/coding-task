@@ -18,6 +18,6 @@ app.use('/api/v1/products', productRoutes);
 
 app.use(errorHandler);
 
-app.listen(5000, () => {
+app.listen(2300, () => {
   console.log('Server running on port 5000');
 });
